@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
 using OfficeDevPnP.Core.Pages;
+using System.Net;
 
 private static readonly string ADMIN_USER_CONFIG_KEY = "SharePointAdminUser";
 private static readonly string ADMIN_PASSWORD_CONFIG_KEY = "SharePointAdminPassword";
