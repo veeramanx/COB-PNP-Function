@@ -25,9 +25,10 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     string adminPassword = System.Environment.GetEnvironmentVariable(ADMIN_PASSWORD_CONFIG_KEY, EnvironmentVariableTarget.Process);
 
     log.Info($"Will attempt to authenticate to SharePoint with username {adminUserName}");
-
+    AuthenticationManager authenticationManager= new AuthenticationManager();
+     
     // auth to SharePoint and get ClientContext..
-    ClientContext siteContext = AuthenticationManager.GetSharePointOnlineAuthenticatedContextTenant(siteUrl, adminUserName, adminPassword);
+    ClientContext siteContext = authenticationManager.GetSharePointOnlineAuthenticatedContextTenant(siteUrl, adminUserName, adminPassword);
     
 
     /*SecureString securePwd = new SecureString();
