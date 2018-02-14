@@ -1,9 +1,9 @@
 using System;
+using System.Net;
 using Newtonsoft.Json;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
 using OfficeDevPnP.Core.Pages;
-using System.Net;
 
 private static readonly string ADMIN_USER_CONFIG_KEY = "SharePointAdminUser";
 private static readonly string ADMIN_PASSWORD_CONFIG_KEY = "SharePointAdminPassword";
@@ -18,6 +18,12 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     string pageName = data.PageName;
     string pageText = data.PageText;
 
+    log.Info($"Received siteUrl={siteUrl}, pageName={pageName}, pageText={pageText}");
+
+    if (siteUrl.Contains("www.contoso.com")) {
+        return req.CreateResponse(HttpStatusCode.BadRequest, "Error: please run in the context of a real SharePoint site, not the local workbench. We need this to know which site to create the page in!");
+    }
+
     // fetch auth credentials from config - N.B. consider use of app authentication for production code!
     string ADMIN_USER_CONFIG_KEY = "SharePointAdminUser";
     string ADMIN_PASSWORD_CONFIG_KEY = "SharePointAdminPassword";
@@ -25,22 +31,9 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     string adminPassword = System.Environment.GetEnvironmentVariable(ADMIN_PASSWORD_CONFIG_KEY, EnvironmentVariableTarget.Process);
 
     log.Info($"Will attempt to authenticate to SharePoint with username {adminUserName}");
-    AuthenticationManager authenticationManager= new AuthenticationManager();
-     
+
     // auth to SharePoint and get ClientContext..
-    ClientContext siteContext = authenticationManager.GetSharePointOnlineAuthenticatedContextTenant(siteUrl, adminUserName, adminPassword);
-    
-
-    /*SecureString securePwd = new SecureString();
-    foreach (char c in adminPassword.ToCharArray()) 
-    {
-        securePwd.AppendChar(c);
-    }
-        ClientContext siteContext = new ClientContext(siteUrl);
-        siteContext.Credentials = new SharePointOnlineCredentials(adminUserName, securePwd);
-*/
-
-    
+    ClientContext siteContext = new OfficeDevPnP.Core.AuthenticationManager().GetSharePointOnlineAuthenticatedContextTenant(siteUrl, adminUserName, adminPassword);
     Site site = siteContext.Site;
     siteContext.Load(site);
     siteContext.ExecuteQueryRetry();
