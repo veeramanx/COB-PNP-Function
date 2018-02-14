@@ -27,7 +27,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     log.Info($"Will attempt to authenticate to SharePoint with username {adminUserName}");
 
     // auth to SharePoint and get ClientContext..
-    ClientContext siteContext = AuthenticationManager().GetSharePointOnlineAuthenticatedContextTenant(siteUrl, adminUserName, adminPassword);
+    ClientContext siteContext = AuthenticationManager.GetSharePointOnlineAuthenticatedContextTenant(siteUrl, adminUserName, adminPassword);
     
 
     /*SecureString securePwd = new SecureString();
