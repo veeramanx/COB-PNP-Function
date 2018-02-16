@@ -38,6 +38,33 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     siteContext.Load(site);
     siteContext.ExecuteQueryRetry();
 
+    Web web = siteContext.Web;
+    siteContext.Load(web);
+    siteContext.ExecuteQueryRetry();
+    string relatedurl=siteUrl+"/SitePages/"+pageName;
+    Microsoft.SharePoint.Client.File file = web.GetFileByServerRelativeUrl("relatedurl");
+    bool bExists = false;
+     try
+     {
+         siteContext.Load(file);
+         siteContext.ExecuteQuery(); //Raises exception if the file doesn't exist
+         bExists = file.Exists;  //may not be needed - here for good measure
+     }
+     catch
+     {  
+    log.Info($"error file exist");
+      }
+
+     if (bExists )
+     {
+         log.Info($"true file exist");
+     }
+     else
+     {
+        log.Info($"not exist file");
+     }
+
+
     log.Info($"Successfully authenticated to site {siteContext.Url}..");
 
     log.Info($"Will attempt to create page with name {data.PageName}");
