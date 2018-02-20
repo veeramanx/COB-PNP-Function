@@ -30,10 +30,13 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     string adminUserName = System.Environment.GetEnvironmentVariable(ADMIN_USER_CONFIG_KEY, EnvironmentVariableTarget.Process);
     string adminPassword = System.Environment.GetEnvironmentVariable(ADMIN_PASSWORD_CONFIG_KEY, EnvironmentVariableTarget.Process);
 
-    log.Info($"Will attempt to authenticate to SharePoint with username {adminUserName}");
+    log.Info($"Will attempt to authenticate to SharePoint with username {adminUserName}, {adminPassword}");
 
     // auth to SharePoint and get ClientContext..
-    ClientContext siteContext = new OfficeDevPnP.Core.AuthenticationManager().GetAppOnlyAuthenticatedContext(siteUrl, adminUserName, adminPassword);
+   // ClientContext siteContext = new OfficeDevPnP.Core.AuthenticationManager().GetAppOnlyAuthenticatedContext(siteUrl, adminUserName, adminPassword);
+
+    OfficeDevPnP.Core.AuthenticationManager authManager = new OfficeDevPnP.Core.AuthenticationManager();
+    ClientContext siteContext = authManager.GetAppOnlyAuthenticatedContext(siteUrl, adminUserName, adminPassword);
     Site site = siteContext.Site;
     siteContext.Load(site);
     siteContext.ExecuteQueryRetry();
