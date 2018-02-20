@@ -36,7 +36,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
    // ClientContext siteContext = new OfficeDevPnP.Core.AuthenticationManager().GetAppOnlyAuthenticatedContext(siteUrl, adminUserName, adminPassword);
 
     OfficeDevPnP.Core.AuthenticationManager authManager = new OfficeDevPnP.Core.AuthenticationManager();
-    ClientContext siteContext = authManager.GetAppOnlyAuthenticatedContext(siteUrl, adminUserName, adminPassword);
+    ClientContext siteContext = authManager.GetAppOnlyAuthenticatedContext(siteUrl, adminUserName, adminPassword, AzureEnvironment.CentralUS );
     Site site = siteContext.Site;
     siteContext.Load(site);
     siteContext.ExecuteQueryRetry();
