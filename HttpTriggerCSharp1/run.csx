@@ -41,8 +41,9 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     Web web = siteContext.Web;
     siteContext.Load(web);
     siteContext.ExecuteQueryRetry();
-    string relatedurl=siteUrl+"/SitePages/"+pageName;
-    Microsoft.SharePoint.Client.File file = web.GetFileByServerRelativeUrl("/SitePages/veeraman.aspx");
+
+    string relatedurl=string.Concat("/SitePages/",pageName);
+    Microsoft.SharePoint.Client.File file = web.GetFileByServerRelativeUrl(relatedurl);
     bool bExists = false;
      try
      {
